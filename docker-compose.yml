@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Serwis bazy danych MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: devops-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: devops-compose
+    ports:
+      - "3308:3306"  # Port bazy danych MySQL
+    networks:
+      - devops-network
+
+  # Serwis aplikacji Java
+  java-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        datasourceurl: "jdbc:mysql://mysql:3306/devops-compose"  # Adres bazy danych (mysql to nazwa serwisu zdefiniowanego w compose)
+        username: "root"
+        password: "root"
+    container_name: devops-java-app
+    environment:
+      DATASOURCE_URL: "jdbc:mysql://mysql:3306/devops-compose"
+      DB_USERNAME: "root"
+      DB_PASSWORD: "root"
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql
+    networks:
+      - devops-network
+
+networks:
+  devops-network:
+    driver: bridge
