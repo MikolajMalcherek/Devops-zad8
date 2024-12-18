@@ -36,5 +36,8 @@ build/
 ### Dockerfile ###
 Dockerfile
 
+### Docker-compose ###
+docker-compose.yml
+
 ### targer directory ###
 target
